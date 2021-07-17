@@ -1,0 +1,56 @@
+header {
+    background-image: linear-gradient(to right, var(--purple), var(--primary));
+}
+
+header h1 {
+    text-align: center;
+    color: white;
+    padding: 10px 0px;
+}
+
+main {
+    margin-top: 1em;
+}
+
+.custom-search-container {
+
+}
+
+.custom-search-card {
+    height: 100%;
+}
+
+#custom-search-button {
+    width: 100%;
+    margin-top: 1em;
+}
+
+.custom-current-weather-container {
+
+
+}
+
+#current-weather-icon {
+    display: inline;
+    height: 3em;
+}
+
+#current-weather-title {
+    display: inline;
+}
+
+.custom-forecast-container {
+    margin-top: 1em;
+    color: brown;
+    background-color: cyan;
+}
+
+.custom-forecast-card {
+    background-color: var(--purple);
+    color: crimson important; 
+}
+
+.custom-forecast-card .card-body .card-title,
+.custom-forecast-card .card-body .card-text {
+    color: white;
+}

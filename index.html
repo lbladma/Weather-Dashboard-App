@@ -1,12 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+    <link rel="stylesheet" href="style.css">
+    <title>Weather Dashboard</title>
 </head>
+
 <body>
-    
+    <header>
+        <h1>Weather Dashboard</h1>
+    </header>
+
+    <main>
+        <!-- Bootstrap grid -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-3 custom-search-container">
+                    <!-- Bootstrap card -->
+                    <div class="card custom-search-card">
+                        <div class="card-body">
+                            <!-- Bootstrap search form with datalist -->
+                            <h5 class="card-title">Search for a city:</h5>
+                            <label for="exampleDataList" class="form-label"></label>
+                            <input class="form-control" list="datalistOptions" id="city-input"
+                                placeholder="Type to search...">
+                            <!--<datalist id="datalistOptions">
+                                <option value="San Francisco">
+                                <option value="New York">
+                                <option value="Seattle">
+                                <option value="Los Angeles">
+                                <option value="Chicago">
+                            </datalist>
+                        -->
+                            <!-- Bootstrap search button -->
+                            <button href="#" class="btn btn-primary" id="custom-search-button">Search</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bootstrap grid -->
+                <div class="col-9">
+                    <div class="custom-current-weather-container">
+                        <!-- Bootstrap card -->
+                        <div class="card" style="width: auto;">
+                            <div class="card-body">
+                                <h5 class="card-title" id="current-weather-title"></h5>
+                                    <img id="current-weather-icon">
+                                <p class="card-text">Temp: <span class="card-text" id="current-temp"></span></p>
+                                <p class="card-text">Wind: <span class="card-text" id="current-wind-speed"></span></p>
+                                <p class="card-text">Humidity: <span class="card-text" id="current-humidity"></span></p>
+                                <p class="card-text">UV Index: <span id="current-uvi"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="custom-forecast-container">
+                        <h5>5-Day Forecast:</h5>
+                        <div class="row justify-content-between">
+                            <div class="col-2">
+                                <!-- Bootstrap card -->
+                                <div class="card custom-forecast-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title forecast-date"></h5>
+                                        <img class="card-img-top forecast-icon">
+                                        <p class="card-text">Temp: <span class="card-text forecast-temp"></span></p>
+                                        <p class="card-text">Wind: <span class="card-text forecast-wind"></span></p>
+                                        <p class="card-text">Humidity: <span class="card-text forecast-humidity"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <!-- Bootstrap card -->
+                                <div class="card custom-forecast-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title forecast-date"></h5>
+                                        <img class="card-img-top forecast-icon">
+                                        <p class="card-text">Temp: <span class="card-text forecast-temp"></span></p>
+                                        <p class="card-text">Wind: <span class="card-text forecast-wind"></span></p>
+                                        <p class="card-text">Humidity: <span class="card-text forecast-humidity"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <!-- Bootstrap card -->
+                                <div class="card custom-forecast-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title forecast-date"></h5>
+                                        <img class="card-img-top forecast-icon">
+                                        <p class="card-text">Temp: <span class="card-text forecast-temp"></span></p>
+                                        <p class="card-text">Wind: <span class="card-text forecast-wind"></span></p>
+                                        <p class="card-text">Humidity: <span class="card-text forecast-humidity"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <!-- Bootstrap card -->
+                                <div class="card custom-forecast-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title forecast-date"></h5>
+                                        <img class="card-img-top forecast-icon">
+                                        <p class="card-text">Temp: <span class="card-text forecast-temp"></span></p>
+                                        <p class="card-text">Wind: <span class="card-text forecast-wind"></span></p>
+                                        <p class="card-text">Humidity: <span class="card-text forecast-humidity"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <!-- Bootstrap card -->
+                                <div class="card custom-forecast-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title forecast-date"></h5>
+                                        <img class="card-img-top forecast-icon">
+                                        <p class="card-text">Temp: <span class="card-text forecast-temp"></span></p>
+                                        <p class="card-text">Wind: <span class="card-text forecast-wind"></span></p>
+                                        <p class="card-text">Humidity: <span class="card-text forecast-humidity"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>

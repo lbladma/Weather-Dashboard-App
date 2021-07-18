@@ -1,17 +1,30 @@
+/*
+	Assignment/Homework-6: Weather Dashboard
+	Author: Taoufik Ammi
+	Date: 07/18/2021 
+	Course: UNC Coding BootCamp
+  CSS file
+*/
+
 .card {
     border: none;
   }
-  
+  /* Body Element 
+*/
   body {
     font-family:cursive; 
     background-size:auto;
     background-color: cyan;
   }
+  /* Body jumbotron 
+*/
   .jumbotron {
     color: white;
     opacity: 0.9;
   }
-  
+  /* Body customCard 
+*/
+
   .customCard {
     opacity: 0.9;
   }

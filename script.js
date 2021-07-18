@@ -1,136 +1,130 @@
-var searchButtonEl = document.querySelector("#custom-search-button");
-var cityInputEl = document.querySelector("#city-input")
+// Added the variables for the elements queries that will be used.
+var userInputEl = document.getElementById("user-input");
+var inputFormEl = document.getElementById("input-form");
+var showingResultsDiv = document.getElementById("showing-results");
+var citiesDiv = document.getElementById("cities");
+var apiKey = "09ce67c28c7fdad99dc9f81de13032bb";
 
-var currentWeatherTitleEl = document.querySelector("#current-weather-title");
-var currentWeatherIconEl = document.querySelector("#current-weather-icon");
-var currentDateEl = document.querySelector("#current-date");
-var currentTempEl = document.querySelector("#current-temp");
-var currentWindSpeedEl = document.querySelector("#current-wind-speed");
-var currentHumidityEl = document.querySelector("#current-humidity");
-var currentUVIEl = document.querySelector("#current-uvi");
+// Added a userFormHandler function that will take the user input and save it in the local storage.
+var userFormHandler = function (event) {
+  event.preventDefault();
 
-var forecastDataElArray = document.querySelectorAll(".forecast-date");
-var forecastIconElArray = document.querySelectorAll(".forecast-icon");
-var forecastTempElArray = document.querySelectorAll(".forecast-temp");
-var forecastWindElArray = document.querySelectorAll(".forecast-wind");
-var forecastHumidityElArray = document.querySelectorAll(".forecast-humidity");
+  var userInput = userInputEl.value.trim();
 
-var currentDate = moment();
+  if (localStorage.getItem("searchHistory") === null) {
+    localStorage.setItem("searchHistory", "[]");
+  }
 
-function init() {
-    // Add event listener to search button
-    searchButtonEl.addEventListener("click", handleSearch);
-}
+  var searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+  searchHistory.unshift(userInput);
 
-// Upon button click,
-function handleSearch() {
-    // Get user input
-    var cityInput = cityInputEl.value.trim();
+  localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+  userInputEl.value = "";
 
-    // Render city name and current date to current weather card
-    var currentWeatherTitle = cityInput + " (" + currentDate.format("M/D/YYYY") + ")";
-    currentWeatherTitleEl.textContent = currentWeatherTitle;
+  renderHistory();
+  getWeatherApi(userInput);
+};
 
-    fetchLatLon(cityInput);
-}
+// Added a renderHistory function that will parse the local storage and render a button for each of the search history saved in the local storage
+var renderHistory = function () {
+  var searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
 
-// Get latitude/longitude of city input
-function fetchLatLon(cityInput) {
-    fetch("http://api.openweathermap.org/geo/1.0/direct?q=" + cityInput + "&limit=1&appid=c8aa884e6f28d929f55e9ba1856815bd")
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            var lat = data[0].lat;
-            var lon = data[0].lon;
-
-            fetchWeather(lat, lon);
-        })
-}
-
-// Get weather data of latitude/longitude of city input
-function fetchWeather(lat, lon) {
-    fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,alerts&units=imperial&appid=c8aa884e6f28d929f55e9ba1856815bd")
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            console.log(data);
-
-            // Get current weather
-            var currentWeather = {
-                weatherIcon: "http://openweathermap.org/img/wn/" + data.current.weather[0].icon + "@2x.png",
-                temp: data.current.temp + " F",
-                windSpeed: data.current.wind_speed + " MPH",
-                humidity: data.current.humidity + "%",
-                UVI: data.current.uvi,
-            };
-
-            var forecastArray = [];
-            // Get 5-day forecast weather, push objects into forecastArray
-            for (i = 0; i < 5; i++) {
-                forecastArray.push(
-                    {
-                        weatherIcon: "http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + "@2x.png",
-                        temp: data.daily[i].temp.max + " F",
-                        windSpeed: data.daily[i].wind_speed + " MPH",
-                        humidity: data.daily[i].humidity + "%",
-                    }
-                );
-            }
-
-            renderCurrentWeather(currentWeather);
-            renderForecast(forecastArray);
-        })
-}
-
-// Render current weather to page
-function renderCurrentWeather(currentWeather) {
-    currentWeatherIconEl.setAttribute("src", currentWeather.weatherIcon);
-    currentTempEl.textContent = currentWeather.temp;
-    currentWindSpeedEl.textContent = currentWeather.windSpeed;
-    currentHumidityEl.textContent = currentWeather.humidity;
-    currentUVIEl.textContent = currentWeather.UVI;
-
-    // Color code UVI
-    if (currentWeather.UVI < 3) {
-        currentUVIEl.setAttribute("class", "card-text btn btn-success");
-    } else if (currentWeather.UVI > 3 && currentWeather.UVI < 5) {
-        currentUVIEl.setAttribute("class", "card-text btn btn-warning");
-    } else {
-        currentUVIEl.setAttribute("class", "card-text btn btn-danger");
+  citiesDiv.innerHTML = "";
+  for (var i = 0; i < searchHistory.length && i < 8; i++) {
+    if (searchHistory[i] !== "") {
+      citiesDiv.innerHTML += `<button class="btn btn-primary bg-gradient w-100 my-1" data-city='${searchHistory[i]}' type="button">${searchHistory[i]}</button>`;
     }
-}
+  }
+};
 
-// Render forecast to page
-function renderForecast(forecastArray) {
-    for (i = 0; i < forecastArray.length; i++) {
-        // Render future dates
-        var forecastDate = currentDate.add(1, "days");
-        forecastDataElArray[i].textContent = forecastDate.format("M/D/YYYY");
+// Added a getWeatherApi function that will make an api call and get the weather data needed
+var getWeatherApi = function (userInput) {
+  var requestUrl =
+    "https://api.openweathermap.org/data/2.5/forecast?q=" +
+    userInput +
+    "&units=imperial&appid=" +
+    apiKey;
 
-        forecastIconElArray[i].setAttribute("src", forecastArray[i].weatherIcon);
-        forecastTempElArray[i].textContent = forecastArray[i].temp;
-        forecastWindElArray[i].textContent = forecastArray[i].windSpeed;
-        forecastHumidityElArray[i].textContent = forecastArray[i].humidity;
-    }
-}
+  fetch(requestUrl)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      renderJumbotron(data);
+    });
+};
 
-// Add current search to local storage
-// Render cities from local storage to page
-// Forloop for persisting the data onto HMTL page
-for (var i = 0; i < localStorage.length; i++) {
+// Added a renderJumbotron function that will get the data from the api call and render it in a jumbotron and will make a call to renderUvIndex function that will fetch and render the uvIndex button
+var renderJumbotron = function (data) {
+  showingResultsDiv.innerHTML = `
+    <div class="jumbotron p-3 m-3 bg-dark bg-gradient rounded">
+    <h1>
+    ${data.city.name} (${moment.unix(data.list[0].dt).format("MM/DD/YYYY")})
+    </h1>
+    <p class="lead">Temp: ${data.list[0].main.temp} &#8457; <br>
+    Wind: ${data.list[0].wind.speed} MPH <br>
+    Humidity: ${data.list[0].main.humidity}% <br>
+    UV index: <span id='uvIndexEl'></span></p>
+    
+  </div>
+  <h1 class='text-white ms-3'>5-Day Forecast:</h1>
+  <div id="fiveDaysForecast" class="row d-flex justify-content-around p-3"></div>`;
+  renderUvIndex(data.city.coord.lat, data.city.coord.lon);
+  renderFiveDaysForecast(data);
+  //document.body.style.backgroundImage = `url('https://source.unsplash.com/1600x900/?${data.city.name}')`;
+};
 
-    var city = localStorage.getItem(i);
-    // console.log(localStorage.getItem("City"));
-    var cityName = $(".list-group").addClass("list-group-item");
+// Added the renderUvIndex funtion that will make an api call to get the uv index and will render a button for it depends on the condition
+var renderUvIndex = function (lat, lon) {
+  var requestUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
-    cityName.append("<li>" + city + "</li>");
-}
+  fetch(requestUrl)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      var uvIndex = data.current.uvi;
+      document.getElementById("uvIndexEl").innerHTML =
+        uvIndex < 3
+          ? `<button type="button" class="btn btn-success bg-gradient">${uvIndex}</button>`
+          : uvIndex < 6
+          ? `<button type="button" class="btn btn-warning bg-gradient">${uvIndex}</button>`
+          : `<button type="button" class="btn btn-danger bg-gradient">${uvIndex}</button>`;
+    });
+};
 
-// Add event listener to city buttons
 
-// Upon button click,
-// Repeat search button function with that city's input
+// Added renderFiveDaysForecast function that will create 5 cards for each day weather forecast
+var renderFiveDaysForecast = function (data) {
+  var neededWeather = [1, 6, 14, 22, 30];
+  for (var i = 0; i < neededWeather.length; i++) {
+    var icon = `https://openweathermap.org/img/w/${
+      data.list[neededWeather[i]].weather[0].icon
+    }.png`;
 
-init();
+    document.getElementById("fiveDaysForecast").innerHTML += `
+    <div class="card col-lg-2 col-md-5 mt-5 bg-dark bg-gradient text-white customCard" >
+    <div class="card-body">
+      <h5 class="card-title">${moment
+        .unix(data.list[neededWeather[i]].dt)
+        .format("MM/DD/YYYY")}</h5><br>
+        <img src="${icon}"/>
+        <p>Temp: ${data.list[neededWeather[i]].main.temp} &#8457; <br>
+        Wind: ${data.list[neededWeather[i]].wind.speed} MPH <br>
+        Humidity: ${data.list[neededWeather[i]].main.humidity}%</p>
+    </div>
+  </div>`;
+  }
+};
+
+// Added buttonClickHandler handler that will render the targeted button city
+var buttonClickHandler = function (event) {
+  var city = event.target.getAttribute("data-city");
+  if (city) {
+    getWeatherApi(city);
+  }
+};
+
+// Added eventListeners
+citiesDiv.addEventListener("click", buttonClickHandler);
+inputFormEl.addEventListener("submit", userFormHandler);
